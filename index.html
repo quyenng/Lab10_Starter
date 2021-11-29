@@ -14,6 +14,8 @@
   <!-- Main Stylesheet & Scripts -->
   <link rel="stylesheet" href="assets/styles/global.css" />
   <script src="assets/scripts/partyHorn.js" type="module"></script>
+
+  <script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
 </head>
 
 <body>
@@ -42,6 +44,43 @@
       <audio class="hidden" src=""></audio>
     </section>
   </main>
+  <script>
+    var user = {
+      key: 'UNIQUE IDENTIFIER',
+    };
+
+    // generate random string to use for key
+    function getRandomString(length) {
+      var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var result = '';
+      for ( var i = 0; i < length; i++ ) {
+          result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+      }
+      return result;
+    }
+
+
+    function render() {
+      user.key = getRandomString(10);
+      console.log('user key is', user.key);
+
+      var shouldShow = ldclient.variation("blue-background", false);
+
+      if (shouldShow) {
+        console.log('is true');
+        document.body.classList.add("blue");
+      }
+    }
+
+          
+    var ldclient = LDClient.initialize('61a30c817386bf104964e21e', user);
+   
+
+    ldclient.on('ready', render);
+    ldclient.on('change', render);
+
+
+  </script>
 </body>
 
 </html>
